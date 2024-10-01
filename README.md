@@ -1,4 +1,4 @@
-# meal-finder-dom-starter
+# meal-finder-api
 
 ### Meal API
 
