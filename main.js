@@ -65,9 +65,6 @@ function addSingleMealToDOM(singleMeal) {
                             </div>
                             </div>`;
   single_mealEl.innerHTML = singleMealElement;
-  search.value = "";
-  mealsEl.innerHTML = "";
-  resultHeading.innerHTML = "";
 }
 
 submit.addEventListener("submit", searchMeals);
@@ -117,48 +114,6 @@ function getMealById(id) {
   fetch(searchUrl + id)
     .then((res) => res.json())
     .then((data) => {
-      clickedMeal(data.meals[0]);
+      addSingleMealToDOM(data.meals[0]);
     });
-}
-
-function clickedMeal(singleMeal) {
-  single_mealEl.innerHTML = "";
-  const { strInstructions, strMeal, strMealThumb, strArea, strCategory } =
-    singleMeal;
-
-  let ingredients = [];
-
-  for (let i = 1; i <= 20; i++) {
-    if (singleMeal["strIngredient" + i]) {
-      const singleIngredient = `<li>${singleMeal["strIngredient" + i]} - ${
-        singleMeal["strMeasure" + i]
-      }</li>`;
-      ingredients.push(singleIngredient);
-    }
-  }
-
-  const stringIngredients = ingredients.join("");
-
-  const singleMealElement = `<div class="single-meal">
-                              <h1>${strMeal}</h1>
-                              <img
-                                  src="${strMealThumb}"
-                                  alt="${strMeal}"
-                              />
-                              <div class="single-meal-info">
-                                  <p>${strCategory}</p>
-                                  <p>${strArea}</p>
-                              </div>
-                              <div class="main">
-                                  <p>
-                                  ${strInstructions}
-                                  </p>
-                                  <h2>Ingredients</h2>
-                                  <ul>
-                                  ${stringIngredients}
-                                  </ul>
-                              </div>
-                              </div>`;
-  single_mealEl.innerHTML = singleMealElement;
-  search.value = "";
 }
