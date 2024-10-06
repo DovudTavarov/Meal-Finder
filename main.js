@@ -1,3 +1,5 @@
+import { getMealsByQueryText, getMealByIdOrRandom } from "./api-calls.js";
+
 const search = document.getElementById("search"),
   submit = document.getElementById("submit"),
   random = document.getElementById("random"),
@@ -5,25 +7,13 @@ const search = document.getElementById("search"),
   resultHeading = document.getElementById("result-heading"),
   single_mealEl = document.getElementById("single-meal");
 
-const randomUrl = "https://www.themealdb.com/api/json/v1/1/random.php";
-
-const searchUrl = "https://www.themealdb.com/api/json/v1/1/lookup.php?i=";
-
-const searchByQueryStrUrl =
-  "https://www.themealdb.com/api/json/v1/1/search.php?s=";
+window.getMealById = getMealById;
 
 random.addEventListener("click", getRandomMeal);
 function getRandomMeal() {
-  fetchData();
-}
-function fetchData() {
-  fetch(randomUrl)
-    .then((res) => res.json())
-    .then((data) => {
-      const meal = data.meals[0];
-      addSingleMealToDOM(meal);
-    })
-    .catch((err) => console.log(err));
+  resultHeading.innerHTML = "";
+  mealsEl.innerHTML = "";
+  getMealByIdOrRandom().then((meal) => addSingleMealToDOM(meal));
 }
 
 function addSingleMealToDOM(singleMeal) {
@@ -75,12 +65,9 @@ function searchMeals(event) {
   const queryString = search.value.trim();
 
   if (queryString) {
-    fetch(searchByQueryStrUrl + queryString)
-      .then((res) => res.json())
-      .then((data) => {
-        addMealsToDOM(data.meals, queryString);
-      })
-      .catch((err) => console.log(err));
+    getMealsByQueryText(queryString).then((meals) =>
+      addMealsToDOM(meals, queryString)
+    );
   }
 }
 
@@ -111,9 +98,5 @@ function addMealsToDOM(meals, queryStr) {
 }
 
 function getMealById(id) {
-  fetch(searchUrl + id)
-    .then((res) => res.json())
-    .then((data) => {
-      addSingleMealToDOM(data.meals[0]);
-    });
+  getMealByIdOrRandom(id).then((meal) => addSingleMealToDOM(meal));
 }
